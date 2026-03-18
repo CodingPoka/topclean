@@ -45,7 +45,7 @@ const InvoicePrint = forwardRef(
           style={{
             background: "#ffffff",
             textAlign: "center",
-            paddingTop: "32px",
+            paddingTop: "34px",
             paddingBottom: "0",
             paddingLeft: "40px",
             paddingRight: "40px",
@@ -56,7 +56,7 @@ const InvoicePrint = forwardRef(
             src="/logot.png"
             alt="Top Clean Logo"
             style={{
-              width: "110px",
+              width: "150px",
               height: "110px",
               objectFit: "contain",
               display: "block",
@@ -98,7 +98,7 @@ const InvoicePrint = forwardRef(
               style={{
                 display: "inline-block",
                 width: "50px",
-                height: "1.5px",
+                height: "1px",
                 background: "#1a3a6b",
               }}
             />
@@ -107,7 +107,7 @@ const InvoicePrint = forwardRef(
               style={{
                 display: "inline-block",
                 width: "50px",
-                height: "1.5px",
+                height: "1px",
                 background: "#1a3a6b",
               }}
             />
@@ -128,7 +128,7 @@ const InvoicePrint = forwardRef(
                 style={{
                   display: "inline-block",
                   width: "150px",
-                  height: "2px",
+                  height: "3px",
                   background: "#1a3a6b",
                 }}
               />
@@ -177,7 +177,7 @@ const InvoicePrint = forwardRef(
                 style={{
                   display: "inline-block",
                   width: "150px",
-                  height: "2px",
+                  height: "3px",
                   background: "#1a3a6b",
                 }}
               />
