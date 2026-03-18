@@ -5,6 +5,7 @@ import InvoicePrint from "../components/invoice/InvoicePrint";
 import {
   getOrdersByDateRange,
   getOrders,
+  getOrderById,
   createInvoice,
   getInvoices,
   deleteInvoice,
@@ -17,6 +18,7 @@ import {
   FileText,
   Calendar,
   User,
+  Eye,
   Trash2,
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -42,6 +44,9 @@ export default function Invoice() {
   const [savingInvoice, setSavingInvoice] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [previewOrders, setPreviewOrders] = useState([]);
+  const [previewMeta, setPreviewMeta] = useState(null);
+  const [viewingInvoiceId, setViewingInvoiceId] = useState(null);
   const invoiceRef = useRef(null);
   const customerPickerRef = useRef(null);
 
@@ -158,6 +163,58 @@ export default function Invoice() {
     }
   };
 
+  const handleViewSavedInvoice = async (invoice) => {
+    setViewingInvoiceId(invoice.id);
+    try {
+      let invoiceOrders = [];
+      if (Array.isArray(invoice.orderIds) && invoice.orderIds.length > 0) {
+        const fetched = await Promise.all(
+          invoice.orderIds.map((orderId) => getOrderById(orderId)),
+        );
+        invoiceOrders = fetched.filter(Boolean);
+      } else {
+        invoiceOrders = await getOrdersByDateRange(
+          invoice.dateFrom,
+          invoice.dateTo,
+        );
+        if (invoice.customerPhone) {
+          invoiceOrders = invoiceOrders.filter(
+            (order) => (order.phone || "").trim() === invoice.customerPhone,
+          );
+        } else if (
+          invoice.customerName &&
+          invoice.customerName !== "All Customers"
+        ) {
+          invoiceOrders = invoiceOrders.filter(
+            (order) =>
+              (order.customerName || "").trim().toLowerCase() ===
+              invoice.customerName.toLowerCase(),
+          );
+        }
+      }
+
+      if (invoiceOrders.length === 0) {
+        toast.error("No orders found for this saved invoice");
+        return;
+      }
+
+      setPreviewOrders(invoiceOrders);
+      setPreviewMeta({
+        dateFrom: invoice.dateFrom,
+        dateTo: invoice.dateTo,
+        customerFilter: invoice.customerName || null,
+        clientName: invoice.customerName || null,
+        clientAddress: invoice.clientAddress || null,
+      });
+      setShowPreview(true);
+    } catch (error) {
+      toast.error("Failed to load saved invoice");
+      console.error(error);
+    } finally {
+      setViewingInvoiceId(null);
+    }
+  };
+
   const handleGenerate = async () => {
     if (!dateFrom || !dateTo) return toast.error("Select a date range");
     setLoading(true);
@@ -188,6 +245,18 @@ export default function Invoice() {
       }
 
       setOrders(data);
+      setPreviewOrders(data);
+      setPreviewMeta({
+        dateFrom,
+        dateTo,
+        customerFilter: customerQuery || null,
+        clientName: selectedCustomer
+          ? selectedCustomer.phone
+            ? `${selectedCustomer.name} (${selectedCustomer.phone})`
+            : selectedCustomer.name
+          : null,
+        clientAddress: clientAddress || null,
+      });
       setGenerated(true);
       setShowPreview(true);
       await saveGeneratedInvoice(data);
@@ -203,7 +272,7 @@ export default function Invoice() {
 
   const handlePrint = useReactToPrint({
     contentRef: invoiceRef,
-    documentTitle: `Invoice_${dateFrom}_to_${dateTo}`,
+    documentTitle: `Invoice_${previewMeta?.dateFrom || dateFrom}_to_${previewMeta?.dateTo || dateTo}`,
     onAfterPrint: () => toast.success("Invoice printed!"),
   });
 
@@ -402,13 +471,39 @@ export default function Invoice() {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => setShowPreview(true)}
+                  onClick={() => {
+                    setPreviewOrders(orders);
+                    setPreviewMeta({
+                      dateFrom,
+                      dateTo,
+                      customerFilter: customerQuery || null,
+                      clientName: selectedCustomer
+                        ? selectedCustomer.phone
+                          ? `${selectedCustomer.name} (${selectedCustomer.phone})`
+                          : selectedCustomer.name
+                        : null,
+                      clientAddress: clientAddress || null,
+                    });
+                    setShowPreview(true);
+                  }}
                   className="btn-outline flex items-center gap-2 text-sm py-2"
                 >
                   <FileText className="w-4 h-4" /> Preview
                 </button>
                 <button
                   onClick={() => {
+                    setPreviewOrders(orders);
+                    setPreviewMeta({
+                      dateFrom,
+                      dateTo,
+                      customerFilter: customerQuery || null,
+                      clientName: selectedCustomer
+                        ? selectedCustomer.phone
+                          ? `${selectedCustomer.name} (${selectedCustomer.phone})`
+                          : selectedCustomer.name
+                        : null,
+                      clientAddress: clientAddress || null,
+                    });
                     setShowPreview(true);
                     setTimeout(handlePrint, 300);
                   }}
@@ -515,14 +610,25 @@ export default function Invoice() {
                           : "—"}
                       </td>
                       <td className="p-3 text-right">
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteInvoice(invoice.id)}
-                          className="inline-flex items-center justify-center p-1.5 rounded-lg hover:bg-red-900/20 text-gray-400 hover:text-red-400 transition-colors"
-                          title="Delete Invoice"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleViewSavedInvoice(invoice)}
+                            disabled={viewingInvoiceId === invoice.id}
+                            className="inline-flex items-center justify-center p-1.5 rounded-lg hover:bg-gold/10 text-gray-400 hover:text-gold transition-colors disabled:opacity-50"
+                            title="View Invoice"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteInvoice(invoice.id)}
+                            className="inline-flex items-center justify-center p-1.5 rounded-lg hover:bg-red-900/20 text-gray-400 hover:text-red-400 transition-colors"
+                            title="Delete Invoice"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -535,7 +641,7 @@ export default function Invoice() {
 
       {/* Invoice Preview Modal */}
       <AnimatePresence>
-        {showPreview && orders.length > 0 && (
+        {showPreview && previewOrders.length > 0 && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
@@ -552,7 +658,7 @@ export default function Invoice() {
             >
               <div className="no-print sticky top-0 bg-gray-50 border-b px-6 py-3 flex items-center justify-between z-10">
                 <span className="text-sm font-semibold text-gray-700">
-                  Invoice Preview — {orders.length} orders
+                  Invoice Preview — {previewOrders.length} orders
                 </span>
                 <div className="flex items-center gap-2">
                   <button
@@ -571,18 +677,12 @@ export default function Invoice() {
               </div>
               <InvoicePrint
                 ref={invoiceRef}
-                orders={orders}
-                dateFrom={dateFrom}
-                dateTo={dateTo}
-                customerFilter={customerQuery || null}
-                clientName={
-                  selectedCustomer
-                    ? selectedCustomer.phone
-                      ? `${selectedCustomer.name} (${selectedCustomer.phone})`
-                      : selectedCustomer.name
-                    : null
-                }
-                clientAddress={clientAddress || null}
+                orders={previewOrders}
+                dateFrom={previewMeta?.dateFrom || dateFrom}
+                dateTo={previewMeta?.dateTo || dateTo}
+                customerFilter={previewMeta?.customerFilter || null}
+                clientName={previewMeta?.clientName || null}
+                clientAddress={previewMeta?.clientAddress || null}
               />
             </motion.div>
           </div>
