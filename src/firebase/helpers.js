@@ -61,6 +61,26 @@ export const getOrderById = async (id) => {
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 };
 
+// ─── INVOICES ───────────────────────────────────────────────────────────────
+
+export const createInvoice = async (invoiceData) => {
+  const ref = await addDoc(collection(db, "invoices"), {
+    ...invoiceData,
+    createdAt: serverTimestamp(),
+  });
+  return ref.id;
+};
+
+export const getInvoices = async () => {
+  const q = query(collection(db, "invoices"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+};
+
+export const deleteInvoice = async (id) => {
+  await deleteDoc(doc(db, "invoices", id));
+};
+
 // ─── SERVICES ─────────────────────────────────────────────────────────────────
 
 export const getServices = async () => {

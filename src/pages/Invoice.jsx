@@ -2,10 +2,23 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import Layout from "../components/layout/Layout";
 import InvoicePrint from "../components/invoice/InvoicePrint";
-import { getOrdersByDateRange, getOrders } from "../firebase/helpers";
+import {
+  getOrdersByDateRange,
+  getOrders,
+  createInvoice,
+  getInvoices,
+  deleteInvoice,
+} from "../firebase/helpers";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Search, Printer, FileText, Calendar, User } from "lucide-react";
+import {
+  Search,
+  Printer,
+  FileText,
+  Calendar,
+  User,
+  Trash2,
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function Invoice() {
@@ -23,14 +36,22 @@ export default function Invoice() {
   const [showCustomerList, setShowCustomerList] = useState(false);
   const [clientAddress, setClientAddress] = useState("");
   const [orders, setOrders] = useState([]);
+  const [savedInvoices, setSavedInvoices] = useState([]);
+  const [invoiceSearch, setInvoiceSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [savingInvoice, setSavingInvoice] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const invoiceRef = useRef(null);
   const customerPickerRef = useRef(null);
 
+  const fetchSavedInvoices = () => {
+    getInvoices().then(setSavedInvoices).catch(console.error);
+  };
+
   useEffect(() => {
     getOrders().then(setAllOrders).catch(console.error);
+    fetchSavedInvoices();
   }, []);
 
   useEffect(() => {
@@ -71,6 +92,72 @@ export default function Invoice() {
       .slice(0, 8);
   }, [customers, customerQuery]);
 
+  const filteredInvoices = useMemo(() => {
+    const query = invoiceSearch.trim().toLowerCase();
+    if (!query) return savedInvoices;
+    return savedInvoices.filter((invoice) => {
+      const invoiceNo = invoice.invoiceNo?.toLowerCase() || "";
+      const customerName = invoice.customerName?.toLowerCase() || "";
+      const customerPhone = invoice.customerPhone?.toLowerCase() || "";
+      const period =
+        `${invoice.dateFrom || ""} ${invoice.dateTo || ""}`.toLowerCase();
+      return (
+        invoiceNo.includes(query) ||
+        customerName.includes(query) ||
+        customerPhone.includes(query) ||
+        period.includes(query)
+      );
+    });
+  }, [savedInvoices, invoiceSearch]);
+
+  const saveGeneratedInvoice = async (invoiceOrders) => {
+    if (invoiceOrders.length === 0) return;
+    const invoiceNo = `INV-${Date.now().toString().slice(-6)}`;
+    const customerName =
+      selectedCustomer?.name || customerQuery || "All Customers";
+    const customerPhone = selectedCustomer?.phone || "";
+    const totalAmount = invoiceOrders.reduce(
+      (sum, order) => sum + (order.total || 0),
+      0,
+    );
+
+    setSavingInvoice(true);
+    try {
+      await createInvoice({
+        invoiceNo,
+        dateFrom,
+        dateTo,
+        customerName,
+        customerPhone,
+        clientAddress: clientAddress || "",
+        ordersCount: invoiceOrders.length,
+        orderIds: invoiceOrders.map((order) => order.id),
+        totalAmount,
+      });
+      fetchSavedInvoices();
+      toast.success("Invoice saved to Firebase");
+    } catch (error) {
+      toast.error("Invoice generated but failed to save");
+      console.error(error);
+    } finally {
+      setSavingInvoice(false);
+    }
+  };
+
+  const handleDeleteInvoice = async (invoiceId) => {
+    if (!confirm("Delete this saved invoice?")) return;
+    try {
+      await deleteInvoice(invoiceId);
+      setSavedInvoices((prev) =>
+        prev.filter((invoice) => invoice.id !== invoiceId),
+      );
+      toast.success("Invoice deleted");
+    } catch (error) {
+      toast.error("Failed to delete invoice");
+      console.error(error);
+    }
+  };
+
   const handleGenerate = async () => {
     if (!dateFrom || !dateTo) return toast.error("Select a date range");
     setLoading(true);
@@ -103,6 +190,7 @@ export default function Invoice() {
       setOrders(data);
       setGenerated(true);
       setShowPreview(true);
+      await saveGeneratedInvoice(data);
       if (data.length === 0)
         toast("No orders found for this range.", { icon: "ℹ️" });
     } catch (e) {
@@ -123,7 +211,7 @@ export default function Invoice() {
 
   return (
     <Layout title="Invoice Generator">
-      <div className="max-w-4xl">
+      <div className="w-full max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto">
         {/* Filter Card */}
         <div className="card p-6 mb-6">
           <div className="flex items-center gap-2 mb-5">
@@ -230,10 +318,10 @@ export default function Invoice() {
             </div>
             <button
               onClick={handleGenerate}
-              disabled={loading}
+              disabled={loading || savingInvoice}
               className="btn-gold flex items-center justify-center gap-2 py-2.5"
             >
-              {loading ? (
+              {loading || savingInvoice ? (
                 <span className="w-4 h-4 border-2 border-navy-900/40 border-t-navy-900 rounded-full animate-spin" />
               ) : (
                 <>
@@ -340,6 +428,109 @@ export default function Invoice() {
             </p>
           </div>
         )}
+
+        {/* Saved Invoices */}
+        <div className="card p-6 mt-6">
+          <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+            <div>
+              <h3 className="text-white font-semibold text-sm">
+                Saved Invoices
+              </h3>
+              <p className="text-gray-500 text-xs">
+                All invoices generated and saved in Firebase
+              </p>
+            </div>
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input
+                className="input-field text-sm py-2 pl-9"
+                placeholder="Search invoice, name, phone..."
+                value={invoiceSearch}
+                onChange={(e) => setInvoiceSearch(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {filteredInvoices.length === 0 ? (
+            <div className="text-center py-10 text-sm text-gray-500">
+              {savedInvoices.length === 0
+                ? "No saved invoices yet."
+                : "No invoices match your search."}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-navy-500/30">
+                    <th className="text-left p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                      Invoice #
+                    </th>
+                    <th className="text-left p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                      Customer
+                    </th>
+                    <th className="text-left p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                      Period
+                    </th>
+                    <th className="text-right p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                      Orders
+                    </th>
+                    <th className="text-right p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                      Total
+                    </th>
+                    <th className="text-right p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                      Created
+                    </th>
+                    <th className="text-right p-3 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredInvoices.map((invoice) => (
+                    <tr
+                      key={invoice.id}
+                      className="border-b border-navy-500/20 hover:bg-navy-600/20 transition-colors"
+                    >
+                      <td className="p-3 text-xs text-gold font-mono">
+                        {invoice.invoiceNo || "—"}
+                      </td>
+                      <td className="p-3 text-sm text-white">
+                        {invoice.customerName || "—"}
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {invoice.customerPhone || "No phone"}
+                        </p>
+                      </td>
+                      <td className="p-3 text-xs text-gray-400">
+                        {invoice.dateFrom || "—"} → {invoice.dateTo || "—"}
+                      </td>
+                      <td className="p-3 text-right text-sm text-gray-400">
+                        {invoice.ordersCount || 0}
+                      </td>
+                      <td className="p-3 text-right text-sm font-semibold text-gold">
+                        ৳{(invoice.totalAmount || 0).toLocaleString()}
+                      </td>
+                      <td className="p-3 text-right text-xs text-gray-500">
+                        {invoice.createdAt?.toDate
+                          ? format(invoice.createdAt.toDate(), "MMM d, yyyy")
+                          : "—"}
+                      </td>
+                      <td className="p-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteInvoice(invoice.id)}
+                          className="inline-flex items-center justify-center p-1.5 rounded-lg hover:bg-red-900/20 text-gray-400 hover:text-red-400 transition-colors"
+                          title="Delete Invoice"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Invoice Preview Modal */}
