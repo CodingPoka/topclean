@@ -62,7 +62,9 @@ const InvoicePrint = forwardRef(
               display: "block",
               margin: "0 auto 10px auto",
             }}
-            onError={(e) => { e.target.style.display = "none"; }}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
           />
 
           {/* Company Name */}
@@ -92,35 +94,95 @@ const InvoicePrint = forwardRef(
               marginBottom: "16px",
             }}
           >
-            <span style={{ display:"inline-block", width:"50px", height:"1.5px", background:"#1a3a6b" }} />
+            <span
+              style={{
+                display: "inline-block",
+                width: "50px",
+                height: "1.5px",
+                background: "#1a3a6b",
+              }}
+            />
             Professional Laundry Services
-            <span style={{ display:"inline-block", width:"50px", height:"1.5px", background:"#1a3a6b" }} />
+            <span
+              style={{
+                display: "inline-block",
+                width: "50px",
+                height: "1.5px",
+                background: "#1a3a6b",
+              }}
+            />
           </div>
 
-          {/* INVOICE pill banner */}
+          {/* INVOICE ribbon banner */}
           <div
             style={{
-              display: "inline-block",
-              background: "linear-gradient(90deg, #1a3a6b, #2563c7)",
-              borderRadius: "30px",
-              padding: "10px 60px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0",
               marginBottom: "0",
             }}
           >
-            <span
+            <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "150px",
+                  height: "2px",
+                  background: "#1a3a6b",
+                }}
+              />
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "9px",
+                  height: "10px",
+                  background: "#1a3a6b",
+                  borderRadius: "2px",
+                  marginRight: "8px",
+                }}
+              />
+            </div>
+            <div
               style={{
-                color: "#ffffff",
-                fontWeight: "900",
-                fontSize: "20px",
-                letterSpacing: "6px",
+                display: "inline-block",
+                background: "linear-gradient(90deg, #1a3a6b, #2563c7)",
+                borderRadius: "9999px",
+                padding: "10px 60px",
               }}
             >
-              INVOICE
-            </span>
+              <span
+                style={{
+                  color: "#ffffff",
+                  fontWeight: "900",
+                  fontSize: "20px",
+                  letterSpacing: "6px",
+                }}
+              >
+                INVOICE
+              </span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "9px",
+                  height: "10px",
+                  background: "#1a3a6b",
+                  borderRadius: "2px",
+                  marginLeft: "8px",
+                }}
+              />
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "150px",
+                  height: "2px",
+                  background: "#1a3a6b",
+                }}
+              />
+            </div>
           </div>
-
-          {/* Blue line under banner */}
-          <div style={{ height: "3px", background: "#1a3a6b", margin: "0 0 0 0" }} />
         </div>
 
         {/* ── INVOICE TO + SERVICE PERIOD ── */}
@@ -172,12 +234,36 @@ const InvoicePrint = forwardRef(
               </span>
             </div>
             <div style={{ paddingLeft: "36px" }}>
-              <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a2e", marginBottom: "2px" }}>
+              <div
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "700",
+                  color: "#1a1a2e",
+                  marginBottom: "2px",
+                }}
+              >
                 {billTo}
               </div>
               {billAddress && (
-                <div style={{ fontSize: "12px", color: "#555", display: "flex", alignItems: "center", gap: "5px" }}>
-                  <span style={{ width:"5px", height:"5px", borderRadius:"50%", background:"#1a3a6b", display:"inline-block", flexShrink:0 }} />
+                <div
+                  style={{
+                    fontSize: "12px",
+                    color: "#555",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "5px",
+                      height: "5px",
+                      borderRadius: "50%",
+                      background: "#1a3a6b",
+                      display: "inline-block",
+                      flexShrink: 0,
+                    }}
+                  />
                   {billAddress}
                 </div>
               )}
@@ -225,7 +311,14 @@ const InvoicePrint = forwardRef(
                 Service Period:
               </span>
             </div>
-            <div style={{ paddingLeft: "36px", fontSize: "13px", fontWeight: "600", color: "#1a1a2e" }}>
+            <div
+              style={{
+                paddingLeft: "36px",
+                fontSize: "13px",
+                fontWeight: "600",
+                color: "#1a1a2e",
+              }}
+            >
               {dateFrom ? format(new Date(dateFrom), "dd MMMM yyyy") : "—"}
               {" – "}
               {dateTo ? format(new Date(dateTo), "dd MMMM yyyy") : "—"}
@@ -247,19 +340,69 @@ const InvoicePrint = forwardRef(
           >
             <thead>
               <tr>
-                <th style={{ padding: "11px 12px", background: "#1a3a6b", color: "#fff", fontSize: "12px", fontWeight: "700", textAlign: "center", width: "48px", borderRight: "1px solid #2a4a8b" }}>
+                <th
+                  style={{
+                    padding: "11px 12px",
+                    background: "#1a3a6b",
+                    color: "#fff",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    textAlign: "center",
+                    width: "48px",
+                    borderRight: "1px solid #2a4a8b",
+                  }}
+                >
                   S/N
                 </th>
-                <th style={{ padding: "11px 12px", background: "#1a3a6b", color: "#fff", fontSize: "12px", fontWeight: "700", textAlign: "left", borderRight: "1px solid #2a4a8b" }}>
+                <th
+                  style={{
+                    padding: "11px 12px",
+                    background: "#1a3a6b",
+                    color: "#fff",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    textAlign: "left",
+                    borderRight: "1px solid #2a4a8b",
+                  }}
+                >
                   Item Description
                 </th>
-                <th style={{ padding: "11px 12px", background: "#2a5298", color: "#fff", fontSize: "12px", fontWeight: "700", textAlign: "center", borderRight: "1px solid #3a62a8" }}>
+                <th
+                  style={{
+                    padding: "11px 12px",
+                    background: "#2a5298",
+                    color: "#fff",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    textAlign: "center",
+                    borderRight: "1px solid #3a62a8",
+                  }}
+                >
                   Quantity
                 </th>
-                <th style={{ padding: "11px 12px", background: "#2a5298", color: "#fff", fontSize: "12px", fontWeight: "700", textAlign: "center", borderRight: "1px solid #3a62a8" }}>
+                <th
+                  style={{
+                    padding: "11px 12px",
+                    background: "#2a5298",
+                    color: "#fff",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    textAlign: "center",
+                    borderRight: "1px solid #3a62a8",
+                  }}
+                >
                   Rate (SDG)
                 </th>
-                <th style={{ padding: "11px 12px", background: "#D4AF37", color: "#1a1a2e", fontSize: "12px", fontWeight: "700", textAlign: "center" }}>
+                <th
+                  style={{
+                    padding: "11px 12px",
+                    background: "#D4AF37",
+                    color: "#1a1a2e",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    textAlign: "center",
+                  }}
+                >
                   Amount (SDG)
                 </th>
               </tr>
@@ -275,19 +418,59 @@ const InvoicePrint = forwardRef(
                       borderBottom: "1px solid #e5e7eb",
                     }}
                   >
-                    <td style={{ padding: "10px 12px", textAlign: "center", fontSize: "12px", fontWeight: "600", color: "#374151", borderRight: "1px solid #e5e7eb" }}>
+                    <td
+                      style={{
+                        padding: "10px 12px",
+                        textAlign: "center",
+                        fontSize: "12px",
+                        fontWeight: "600",
+                        color: "#374151",
+                        borderRight: "1px solid #e5e7eb",
+                      }}
+                    >
                       {String(i + 1).padStart(2, "0")}
                     </td>
-                    <td style={{ padding: "10px 12px", fontSize: "13px", fontWeight: "500", borderRight: "1px solid #e5e7eb" }}>
+                    <td
+                      style={{
+                        padding: "10px 12px",
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        borderRight: "1px solid #e5e7eb",
+                      }}
+                    >
                       {item.name}
                     </td>
-                    <td style={{ padding: "10px 12px", textAlign: "center", fontWeight: "700", fontSize: "13px", borderRight: "1px solid #e5e7eb" }}>
+                    <td
+                      style={{
+                        padding: "10px 12px",
+                        textAlign: "center",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        borderRight: "1px solid #e5e7eb",
+                      }}
+                    >
                       {item.qty > 0 ? item.qty.toLocaleString() : "—"}
                     </td>
-                    <td style={{ padding: "10px 12px", textAlign: "center", fontSize: "13px", color: "#374151", borderRight: "1px solid #e5e7eb" }}>
+                    <td
+                      style={{
+                        padding: "10px 12px",
+                        textAlign: "center",
+                        fontSize: "13px",
+                        color: "#374151",
+                        borderRight: "1px solid #e5e7eb",
+                      }}
+                    >
                       {item.rate > 0 ? item.rate.toLocaleString() : "—"}
                     </td>
-                    <td style={{ padding: "10px 12px", textAlign: "center", fontWeight: "700", fontSize: "13px", color: "#1a1a2e" }}>
+                    <td
+                      style={{
+                        padding: "10px 12px",
+                        textAlign: "center",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        color: "#1a1a2e",
+                      }}
+                    >
                       {amount > 0 ? amount.toLocaleString() : "—"}
                     </td>
                   </tr>
@@ -316,7 +499,15 @@ const InvoicePrint = forwardRef(
               flexShrink: 0,
             }}
           >
-            <span style={{ color: "#ffffff", fontWeight: "800", fontSize: "15px", letterSpacing: "1px", whiteSpace: "nowrap" }}>
+            <span
+              style={{
+                color: "#ffffff",
+                fontWeight: "800",
+                fontSize: "15px",
+                letterSpacing: "1px",
+                whiteSpace: "nowrap",
+              }}
+            >
               TOTAL AMOUNT:
             </span>
           </div>
@@ -330,10 +521,24 @@ const InvoicePrint = forwardRef(
               justifyContent: "flex-end",
             }}
           >
-            <span style={{ color: "#1a1a2e", fontWeight: "900", fontSize: "26px", letterSpacing: "1px" }}>
+            <span
+              style={{
+                color: "#1a1a2e",
+                fontWeight: "900",
+                fontSize: "26px",
+                letterSpacing: "1px",
+              }}
+            >
               {grandTotal.toLocaleString()}
             </span>
-            <span style={{ color: "#1a1a2e", fontWeight: "700", fontSize: "16px", marginLeft: "6px" }}>
+            <span
+              style={{
+                color: "#1a1a2e",
+                fontWeight: "700",
+                fontSize: "16px",
+                marginLeft: "6px",
+              }}
+            >
               SDG
             </span>
           </div>
@@ -375,42 +580,142 @@ const InvoicePrint = forwardRef(
               >
                 💳
               </div>
-              <span style={{ fontSize: "14px", fontWeight: "800", color: "#1a3a6b" }}>
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "800",
+                  color: "#1a3a6b",
+                }}
+              >
                 Payment Details
               </span>
             </div>
-            <div style={{ fontSize: "12px", color: "#374151", lineHeight: "2.2", paddingLeft: "4px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ width:"7px", height:"7px", borderRadius:"50%", background:"#1a3a6b", display:"inline-block", flexShrink:0 }} />
-                Payment Due: <strong style={{ marginLeft: "4px" }}>Upon Receipt</strong>
+            <div
+              style={{
+                fontSize: "12px",
+                color: "#374151",
+                lineHeight: "2.2",
+                paddingLeft: "4px",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <span
+                  style={{
+                    width: "7px",
+                    height: "7px",
+                    borderRadius: "50%",
+                    background: "#1a3a6b",
+                    display: "inline-block",
+                    flexShrink: 0,
+                  }}
+                />
+                Payment Due:{" "}
+                <strong style={{ marginLeft: "4px" }}>Upon Receipt</strong>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ width:"7px", height:"7px", borderRadius:"50%", background:"#1a3a6b", display:"inline-block", flexShrink:0 }} />
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <span
+                  style={{
+                    width: "7px",
+                    height: "7px",
+                    borderRadius: "50%",
+                    background: "#1a3a6b",
+                    display: "inline-block",
+                    flexShrink: 0,
+                  }}
+                />
                 Payment Method:{" "}
-                <span style={{ display:"inline-block", width:"100px", borderBottom:"1px solid #9ca3af", marginLeft:"4px" }} />
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "100px",
+                    borderBottom: "1px solid #9ca3af",
+                    marginLeft: "4px",
+                  }}
+                />
               </div>
             </div>
           </div>
 
           {/* Totals */}
           <div>
-            <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #e5e7eb", borderRadius: "6px", overflow: "hidden" }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                border: "1px solid #e5e7eb",
+                borderRadius: "6px",
+                overflow: "hidden",
+              }}
+            >
               <tbody>
                 <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
-                  <td style={{ padding: "8px 14px", fontSize: "12px", color: "#6b7280" }}>Subtotal:</td>
-                  <td style={{ padding: "8px 14px", fontSize: "13px", fontWeight: "700", textAlign: "right", color: "#1a1a2e" }}>
+                  <td
+                    style={{
+                      padding: "8px 14px",
+                      fontSize: "12px",
+                      color: "#6b7280",
+                    }}
+                  >
+                    Subtotal:
+                  </td>
+                  <td
+                    style={{
+                      padding: "8px 14px",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      textAlign: "right",
+                      color: "#1a1a2e",
+                    }}
+                  >
                     {subtotal.toLocaleString()} SDG
                   </td>
                 </tr>
                 <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
-                  <td style={{ padding: "8px 14px", fontSize: "12px", color: "#6b7280" }}>Tax (0%):</td>
-                  <td style={{ padding: "8px 14px", fontSize: "13px", fontWeight: "700", textAlign: "right", color: "#1a1a2e" }}>
+                  <td
+                    style={{
+                      padding: "8px 14px",
+                      fontSize: "12px",
+                      color: "#6b7280",
+                    }}
+                  >
+                    Tax (0%):
+                  </td>
+                  <td
+                    style={{
+                      padding: "8px 14px",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      textAlign: "right",
+                      color: "#1a1a2e",
+                    }}
+                  >
                     0 SDG
                   </td>
                 </tr>
                 <tr style={{ background: "#1a3a6b" }}>
-                  <td style={{ padding: "10px 14px", fontSize: "13px", fontWeight: "800", color: "#D4AF37" }}>Grand Total:</td>
-                  <td style={{ padding: "10px 14px", fontSize: "14px", fontWeight: "900", textAlign: "right", color: "#ffffff" }}>
+                  <td
+                    style={{
+                      padding: "10px 14px",
+                      fontSize: "13px",
+                      fontWeight: "800",
+                      color: "#D4AF37",
+                    }}
+                  >
+                    Grand Total:
+                  </td>
+                  <td
+                    style={{
+                      padding: "10px 14px",
+                      fontSize: "14px",
+                      fontWeight: "900",
+                      textAlign: "right",
+                      color: "#ffffff",
+                    }}
+                  >
                     {grandTotal.toLocaleString()} SDG
                   </td>
                 </tr>
@@ -436,7 +741,8 @@ const InvoicePrint = forwardRef(
               left: 0,
               right: 0,
               height: "60px",
-              background: "linear-gradient(135deg, #1a3a6b 0%, #2563c7 50%, #1a3a6b 100%)",
+              background:
+                "linear-gradient(135deg, #1a3a6b 0%, #2563c7 50%, #1a3a6b 100%)",
               clipPath: "ellipse(110% 100% at 50% 100%)",
             }}
           />
@@ -463,9 +769,24 @@ const InvoicePrint = forwardRef(
                   fontSize: "13px",
                 }}
               >
-                <span style={{ display:"inline-block", width:"30px", height:"1.5px", background:"#9ca3af" }} />
-                Thank you for choosing <strong style={{ color: "#1a3a6b" }}>Top Clean Laundry!</strong>
-                <span style={{ display:"inline-block", width:"30px", height:"1.5px", background:"#9ca3af" }} />
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "30px",
+                    height: "1.5px",
+                    background: "#9ca3af",
+                  }}
+                />
+                Thank you for choosing{" "}
+                <strong style={{ color: "#1a3a6b" }}>Top Clean Laundry!</strong>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "30px",
+                    height: "1.5px",
+                    background: "#9ca3af",
+                  }}
+                />
               </div>
               <div
                 style={{
@@ -486,7 +807,14 @@ const InvoicePrint = forwardRef(
             </div>
 
             {/* Laundry icons */}
-            <div style={{ fontSize: "28px", display: "flex", gap: "6px", alignItems: "center" }}>
+            <div
+              style={{
+                fontSize: "28px",
+                display: "flex",
+                gap: "6px",
+                alignItems: "center",
+              }}
+            >
               🧺 🛁 👕 🫧
             </div>
           </div>
