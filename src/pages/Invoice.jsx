@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import Layout from "../components/layout/Layout";
 import InvoicePrint from "../components/invoice/InvoicePrint";
@@ -17,25 +17,89 @@ export default function Invoice() {
 
   const [dateFrom, setDateFrom] = useState(firstOfMonth);
   const [dateTo, setDateTo] = useState(today);
-  const [customerFilter, setCustomerFilter] = useState("");
-  const [clientName, setClientName] = useState("");
+  const [allOrders, setAllOrders] = useState([]);
+  const [customerQuery, setCustomerQuery] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [showCustomerList, setShowCustomerList] = useState(false);
   const [clientAddress, setClientAddress] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const invoiceRef = useRef(null);
+  const customerPickerRef = useRef(null);
+
+  useEffect(() => {
+    getOrders().then(setAllOrders).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    const onDocumentClick = (event) => {
+      if (!customerPickerRef.current?.contains(event.target)) {
+        setShowCustomerList(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocumentClick);
+    return () => document.removeEventListener("mousedown", onDocumentClick);
+  }, []);
+
+  const customers = useMemo(() => {
+    const map = new Map();
+    allOrders.forEach((order) => {
+      const name = order.customerName?.trim();
+      const phone = order.phone?.trim() || "";
+      if (!name) return;
+      const key = `${name.toLowerCase()}|${phone}`;
+      if (!map.has(key)) {
+        map.set(key, { name, phone });
+      }
+    });
+    return Array.from(map.values()).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
+  }, [allOrders]);
+
+  const customerSuggestions = useMemo(() => {
+    const query = customerQuery.trim().toLowerCase();
+    if (!query) return customers.slice(0, 8);
+    return customers
+      .filter(
+        (customer) =>
+          customer.name.toLowerCase().includes(query) ||
+          customer.phone.toLowerCase().includes(query),
+      )
+      .slice(0, 8);
+  }, [customers, customerQuery]);
 
   const handleGenerate = async () => {
     if (!dateFrom || !dateTo) return toast.error("Select a date range");
     setLoading(true);
     try {
       let data = await getOrdersByDateRange(dateFrom, dateTo);
-      if (customerFilter.trim()) {
-        data = data.filter((o) =>
-          o.customerName?.toLowerCase().includes(customerFilter.toLowerCase()),
+      const typedFilter = customerQuery.trim().toLowerCase();
+
+      if (selectedCustomer) {
+        if (selectedCustomer.phone) {
+          data = data.filter(
+            (order) =>
+              (order.phone || "").trim().toLowerCase() ===
+              selectedCustomer.phone.toLowerCase(),
+          );
+        } else {
+          data = data.filter(
+            (order) =>
+              order.customerName?.trim().toLowerCase() ===
+              selectedCustomer.name.toLowerCase(),
+          );
+        }
+      } else if (typedFilter) {
+        data = data.filter(
+          (o) =>
+            o.customerName?.toLowerCase().includes(typedFilter) ||
+            o.phone?.toLowerCase().includes(typedFilter),
         );
       }
+
       setOrders(data);
       setGenerated(true);
       setShowPreview(true);
@@ -78,16 +142,55 @@ export default function Invoice() {
 
           {/* Client Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div>
+            <div ref={customerPickerRef} className="relative">
               <label className="text-xs text-gray-400 flex items-center gap-1 mb-1.5">
-                <User className="w-3 h-3" /> Invoice To (Client / Hotel Name)
+                <User className="w-3 h-3" /> Customer (Name or Phone)
               </label>
-              <input
-                className="input-field text-sm py-2"
-                placeholder="e.g. Bel Mar Residence Hotel"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-              />
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <input
+                  className="input-field text-sm py-2 pl-9"
+                  placeholder="Type customer name or phone"
+                  value={customerQuery}
+                  onFocus={() => setShowCustomerList(true)}
+                  onChange={(e) => {
+                    setCustomerQuery(e.target.value);
+                    setSelectedCustomer(null);
+                    setShowCustomerList(true);
+                  }}
+                />
+              </div>
+
+              {showCustomerList && customerSuggestions.length > 0 && (
+                <div className="absolute z-20 mt-1 w-full bg-navy-800 border border-navy-500/40 rounded-xl shadow-xl max-h-56 overflow-y-auto">
+                  {customerSuggestions.map((customer) => {
+                    const key = `${customer.name}-${customer.phone || "no-phone"}`;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        className="w-full text-left px-3 py-2.5 hover:bg-navy-700/60 border-b border-navy-500/20 last:border-b-0"
+                        onClick={() => {
+                          setSelectedCustomer(customer);
+                          setCustomerQuery(
+                            customer.phone
+                              ? `${customer.name} • ${customer.phone}`
+                              : customer.name,
+                          );
+                          setShowCustomerList(false);
+                        }}
+                      >
+                        <p className="text-sm text-white font-medium">
+                          {customer.name}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {customer.phone || "No phone"}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div>
               <label className="text-xs text-gray-400 mb-1.5 block">
@@ -102,7 +205,7 @@ export default function Invoice() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
             <div>
               <label className="text-xs text-gray-400 flex items-center gap-1 mb-1.5">
                 <Calendar className="w-3 h-3" /> From Date
@@ -123,17 +226,6 @@ export default function Invoice() {
                 className="input-field text-sm py-2"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-400 flex items-center gap-1 mb-1.5">
-                <User className="w-3 h-3" /> Customer (optional)
-              </label>
-              <input
-                className="input-field text-sm py-2"
-                placeholder="Filter by name..."
-                value={customerFilter}
-                onChange={(e) => setCustomerFilter(e.target.value)}
               />
             </div>
             <button
@@ -291,8 +383,14 @@ export default function Invoice() {
                 orders={orders}
                 dateFrom={dateFrom}
                 dateTo={dateTo}
-                customerFilter={customerFilter || null}
-                clientName={clientName || null}
+                customerFilter={customerQuery || null}
+                clientName={
+                  selectedCustomer
+                    ? selectedCustomer.phone
+                      ? `${selectedCustomer.name} (${selectedCustomer.phone})`
+                      : selectedCustomer.name
+                    : null
+                }
                 clientAddress={clientAddress || null}
               />
             </motion.div>
