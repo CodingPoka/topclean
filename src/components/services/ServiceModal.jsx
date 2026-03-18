@@ -4,9 +4,9 @@ import { X, Upload, Loader2 } from "lucide-react";
 import { addService, updateService } from "../../firebase/helpers";
 import toast from "react-hot-toast";
 
-// ⚠️ Replace with your Cloudinary cloud name and unsigned upload preset
-const CLOUDINARY_CLOUD = "dtgw5ikpi";
-const CLOUDINARY_PRESET = "topclean";
+// Cloudinary credentials loaded from environment variables
+const CLOUDINARY_CLOUD = import.meta.env.VITE_CLOUDINARY_CLOUD;
+const CLOUDINARY_PRESET = import.meta.env.VITE_CLOUDINARY_PRESET;
 
 export default function ServiceModal({ open, onClose, onSaved, editData }) {
   const [form, setForm] = useState({
