@@ -73,11 +73,11 @@ export default function Orders() {
 
   return (
     <Layout title="Orders">
-      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-        <div className="relative">
+      <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
+        <div className="relative w-full sm:w-auto">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <input
-            className="input-field pl-9 py-2 text-sm w-72"
+            className="input-field pl-9 py-2 text-sm w-full sm:w-72"
             placeholder="Search by name, phone, receipt..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -204,7 +204,7 @@ export default function Orders() {
       </div>
 
       {/* Summary */}
-      <div className="mt-3 flex items-center justify-between text-xs text-gray-600">
+      <div className="mt-3 flex items-center justify-between gap-2 flex-wrap text-xs text-gray-600">
         <span>
           Showing {filtered.length} of {orders.length} orders
         </span>
@@ -240,14 +240,14 @@ export default function Orders() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="relative max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
             >
-              <div className="no-print sticky top-0 bg-gray-50 border-b px-6 py-3 flex items-center justify-between z-10">
+              <div className="no-print sticky top-0 bg-gray-50 border-b px-4 sm:px-6 py-3 flex items-center justify-between gap-2 z-10">
                 <span className="text-sm font-semibold text-gray-700">
                   Receipt Preview
                 </span>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handlePrint()}
-                    className="flex items-center gap-1.5 bg-[#0A1628] text-[#D4AF37] text-sm px-4 py-2 rounded-xl font-medium hover:bg-[#112240] transition-colors"
+                    className="flex items-center gap-1.5 bg-[#0A1628] text-[#D4AF37] text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-xl font-medium hover:bg-[#112240] transition-colors"
                   >
                     <Printer className="w-4 h-4" /> Print Receipt
                   </button>

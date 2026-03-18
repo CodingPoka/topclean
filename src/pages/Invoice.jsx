@@ -448,8 +448,8 @@ export default function Invoice() {
             animate={{ opacity: 1, y: 0 }}
             className="card p-5 mb-4 border border-gold/20"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
+            <div className="flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row">
+              <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
                 <div>
                   <p className="text-xs text-gray-500">Orders Found</p>
                   <p className="text-xl font-bold text-white">
@@ -469,7 +469,7 @@ export default function Invoice() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full sm:w-auto">
                 <button
                   onClick={() => {
                     setPreviewOrders(orders);
@@ -486,7 +486,7 @@ export default function Invoice() {
                     });
                     setShowPreview(true);
                   }}
-                  className="btn-outline flex items-center gap-2 text-sm py-2"
+                  className="btn-outline flex-1 sm:flex-none justify-center flex items-center gap-2 text-sm py-2"
                 >
                   <FileText className="w-4 h-4" /> Preview
                 </button>
@@ -507,7 +507,7 @@ export default function Invoice() {
                     setShowPreview(true);
                     setTimeout(handlePrint, 300);
                   }}
-                  className="btn-gold flex items-center gap-2 text-sm py-2"
+                  className="btn-gold flex-1 sm:flex-none justify-center flex items-center gap-2 text-sm py-2"
                 >
                   <Printer className="w-4 h-4" /> Print Invoice
                 </button>
@@ -656,14 +656,14 @@ export default function Invoice() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="relative max-w-3xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
             >
-              <div className="no-print sticky top-0 bg-gray-50 border-b px-6 py-3 flex items-center justify-between z-10">
-                <span className="text-sm font-semibold text-gray-700">
+              <div className="no-print sticky top-0 bg-gray-50 border-b px-4 sm:px-6 py-3 flex items-center justify-between gap-2 z-10">
+                <span className="text-xs sm:text-sm font-semibold text-gray-700">
                   Invoice Preview — {previewOrders.length} orders
                 </span>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handlePrint()}
-                    className="flex items-center gap-1.5 bg-[#0A1628] text-[#D4AF37] text-sm px-4 py-2 rounded-xl font-medium hover:bg-[#112240] transition-colors"
+                    className="flex items-center gap-1.5 bg-[#0A1628] text-[#D4AF37] text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-xl font-medium hover:bg-[#112240] transition-colors"
                   >
                     <Printer className="w-4 h-4" /> Print Invoice
                   </button>

@@ -99,7 +99,7 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
             className="relative w-full max-w-4xl card shadow-gold-lg border border-gold/10 max-h-[90vh] flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-navy-500/30">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-navy-500/30">
               <div>
                 <h2 className="text-lg font-semibold text-white">New Order</h2>
                 <p className="text-gray-500 text-sm">
@@ -114,15 +114,15 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
               </button>
             </div>
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
               {/* Left: Customer + Services */}
-              <div className="flex-1 p-6 overflow-y-auto border-r border-navy-500/30 space-y-5">
+              <div className="flex-1 p-4 sm:p-6 overflow-y-auto lg:border-r border-navy-500/30 space-y-5">
                 {/* Customer Info */}
                 <div>
                   <h3 className="text-sm font-semibold text-gold mb-3">
                     Customer Information
                   </h3>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs text-gray-400 block mb-1">
                         Full Name *
@@ -166,7 +166,7 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
                       onChange={(e) => setSearch(e.target.value)}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto pr-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto pr-1">
                     {filtered.map((svc) => (
                       <button
                         key={svc.id}
@@ -207,7 +207,7 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
               </div>
 
               {/* Right: Cart */}
-              <div className="w-72 p-6 flex flex-col">
+              <div className="w-full lg:w-72 p-4 sm:p-6 flex flex-col border-t lg:border-t-0 border-navy-500/30">
                 <h3 className="text-sm font-semibold text-gold mb-4">
                   Order Summary
                 </h3>
