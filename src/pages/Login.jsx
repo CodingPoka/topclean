@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { Sparkles } from "lucide-react";
 
 export default function Login() {
   const { login } = useAuth();
@@ -41,11 +40,15 @@ export default function Login() {
         className="relative w-full max-w-md"
       >
         {/* Card */}
-        <div className="card p-10 shadow-gold-lg border border-gold/10">
+        <div className="card px-10 pb-10 pt-7 shadow-gold-lg border border-gold/10">
           {/* Logo / Brand */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gold/10 border border-gold/30 mb-4">
-              <Sparkles className="w-8 h-8 text-gold" />
+            <div className="inline-flex items-center justify-center mb-1">
+              <img
+                src="/logot.png"
+                alt="Top Clean Logo"
+                className="w-32 h-32 object-contain"
+              />
             </div>
             <h1 className="font-display text-3xl font-bold text-white mb-1">
               Top Clean
