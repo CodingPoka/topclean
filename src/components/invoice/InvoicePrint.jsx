@@ -20,6 +20,8 @@ const InvoicePrint = forwardRef(
       });
     });
     const lineItems = Object.values(itemMap);
+    const minimumVisibleRows = 8;
+    const emptyRowsCount = Math.max(0, minimumVisibleRows - lineItems.length);
     const subtotal = lineItems.reduce((s, item) => s + item.qty * item.rate, 0);
     const tax = 0;
     const grandTotal = subtotal + tax;
@@ -45,7 +47,7 @@ const InvoicePrint = forwardRef(
           style={{
             background: "#ffffff",
             textAlign: "center",
-            paddingTop: "34px",
+            paddingTop: "40px",
             paddingBottom: "0",
             paddingLeft: "40px",
             paddingRight: "40px",
@@ -472,6 +474,81 @@ const InvoicePrint = forwardRef(
                       }}
                     >
                       {amount > 0 ? amount.toLocaleString() : "—"}
+                    </td>
+                  </tr>
+                );
+              })}
+              {Array.from({ length: emptyRowsCount }).map((_, i) => {
+                const rowNumber = lineItems.length + i + 1;
+                const isEvenRow = (lineItems.length + i) % 2 === 0;
+                return (
+                  <tr
+                    key={`empty-${i}`}
+                    style={{
+                      background: isEvenRow ? "#ffffff" : "#dbeafe33",
+                      borderBottom: "1px solid #e5e7eb",
+                    }}
+                  >
+                    <td
+                      style={{
+                        padding: "7px 12px",
+                        textAlign: "center",
+                        fontSize: "12px",
+                        fontWeight: "600",
+                        color: "#9ca3af",
+                        borderRight: "1px solid #e5e7eb",
+                      }}
+                    >
+                      {String(rowNumber).padStart(2, "0")}
+                    </td>
+                    <td
+                      style={{
+                        padding: "7px 12px",
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        borderRight: "1px solid #e5e7eb",
+                        color: "#d1d5db",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {"\u00A0"}
+                    </td>
+                    <td
+                      style={{
+                        padding: "7px 12px",
+                        textAlign: "center",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        borderRight: "1px solid #e5e7eb",
+                        color: "#d1d5db",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {"\u00A0"}
+                    </td>
+                    <td
+                      style={{
+                        padding: "7px 12px",
+                        textAlign: "center",
+                        fontSize: "13px",
+                        color: "#d1d5db",
+                        borderRight: "1px solid #e5e7eb",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {"\u00A0"}
+                    </td>
+                    <td
+                      style={{
+                        padding: "7px 12px",
+                        textAlign: "center",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        color: "#d1d5db",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {"\u00A0"}
                     </td>
                   </tr>
                 );
