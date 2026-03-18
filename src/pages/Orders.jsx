@@ -67,7 +67,7 @@ export default function Orders() {
   const filtered = orders.filter(
     (o) =>
       o.customerName?.toLowerCase().includes(search.toLowerCase()) ||
-      o.roomNumber?.includes(search) ||
+      o.phone?.includes(search) ||
       o.receiptNo?.toLowerCase().includes(search.toLowerCase()),
   );
 
@@ -78,7 +78,7 @@ export default function Orders() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <input
             className="input-field pl-9 py-2 text-sm w-72"
-            placeholder="Search by name, room, receipt..."
+            placeholder="Search by name, phone, receipt..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -104,7 +104,7 @@ export default function Orders() {
                   Customer
                 </th>
                 <th className="text-left p-4 text-xs text-gray-500 font-semibold uppercase tracking-wide">
-                  Room
+                  Phone
                 </th>
                 <th className="text-left p-4 text-xs text-gray-500 font-semibold uppercase tracking-wide">
                   Services
@@ -164,7 +164,7 @@ export default function Orders() {
                       </div>
                     </td>
                     <td className="p-4 text-sm text-gray-400">
-                      {order.roomNumber}
+                      {order.phone || "—"}
                     </td>
                     <td className="p-4 text-sm text-gray-400 max-w-xs truncate">
                       {order.items?.map((i) => i.name).join(", ")}

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 export default function CreateOrderModal({ open, onClose, onCreated }) {
   const [services, setServices] = useState([]);
-  const [customer, setCustomer] = useState({ name: "", room: "", phone: "" });
+  const [customer, setCustomer] = useState({ name: "", phone: "" });
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,14 +43,12 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
 
   const handleSubmit = async () => {
     if (!customer.name.trim()) return toast.error("Customer name is required");
-    if (!customer.room.trim()) return toast.error("Room number is required");
     if (cart.length === 0) return toast.error("Add at least one service");
 
     setLoading(true);
     try {
       const orderId = await createOrder({
         customerName: customer.name.trim(),
-        roomNumber: customer.room.trim(),
         phone: customer.phone.trim(),
         items: cart.map((i) => ({
           id: i.id,
@@ -74,7 +72,7 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
   };
 
   const handleClose = () => {
-    setCustomer({ name: "", room: "", phone: "" });
+    setCustomer({ name: "", phone: "" });
     setCart([]);
     setSearch("");
     setNote("");
@@ -124,7 +122,7 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
                   <h3 className="text-sm font-semibold text-gold mb-3">
                     Customer Information
                   </h3>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs text-gray-400 block mb-1">
                         Full Name *
@@ -135,19 +133,6 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
                         value={customer.name}
                         onChange={(e) =>
                           setCustomer({ ...customer, name: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-400 block mb-1">
-                        Room No. *
-                      </label>
-                      <input
-                        className="input-field text-sm py-2"
-                        placeholder="501"
-                        value={customer.room}
-                        onChange={(e) =>
-                          setCustomer({ ...customer, room: e.target.value })
                         }
                       />
                     </div>
