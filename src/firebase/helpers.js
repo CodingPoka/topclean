@@ -166,3 +166,84 @@ export const getDashboardStats = async () => {
     recentOrders: orders.slice(0, 8),
   };
 };
+
+export const getDailyRecordsByMonth = async (monthKey) => {
+  const now = new Date();
+  const [year, month] = (monthKey || "").split("-").map(Number);
+
+  const targetYear = Number.isInteger(year) ? year : now.getFullYear();
+  const targetMonthIndex = Number.isInteger(month) ? month - 1 : now.getMonth();
+
+  const monthStart = new Date(targetYear, targetMonthIndex, 1);
+  const monthEnd = new Date(targetYear, targetMonthIndex + 1, 0, 23, 59, 59);
+
+  const isCurrentMonth =
+    targetYear === now.getFullYear() && targetMonthIndex === now.getMonth();
+  const effectiveEnd = isCurrentMonth ? now : monthEnd;
+
+  const startDate = monthStart.toISOString().split("T")[0];
+  const endDate = effectiveEnd.toISOString().split("T")[0];
+  const orders = await getOrdersByDateRange(startDate, endDate);
+
+  const dailyMap = {};
+  orders.forEach((order) => {
+    const createdDate = order.createdAt?.toDate?.();
+    if (!createdDate) return;
+
+    const dayKey = `${createdDate.getFullYear()}-${String(
+      createdDate.getMonth() + 1,
+    ).padStart(2, "0")}-${String(createdDate.getDate()).padStart(2, "0")}`;
+
+    if (!dailyMap[dayKey]) {
+      dailyMap[dayKey] = { orders: 0, sales: 0, date: createdDate };
+    }
+
+    dailyMap[dayKey].orders += 1;
+    dailyMap[dayKey].sales += order.total || 0;
+  });
+
+  const allDays = [];
+  const startOfWindow = new Date(targetYear, targetMonthIndex, 1, 0, 0, 0, 0);
+  const endOfWindow = new Date(
+    effectiveEnd.getFullYear(),
+    effectiveEnd.getMonth(),
+    effectiveEnd.getDate(),
+    23,
+    59,
+    59,
+    999,
+  );
+
+  const totalDaysInWindow = Math.floor(
+    (endOfWindow.getTime() - startOfWindow.getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  for (let i = 0; i <= totalDaysInWindow; i++) {
+    const d = new Date(targetYear, targetMonthIndex, 1 + i);
+    if (d > effectiveEnd) break;
+
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0",
+    )}-${String(d.getDate()).padStart(2, "0")}`;
+    const found = dailyMap[key];
+
+    allDays.push({
+      dateKey: key,
+      day: d.toLocaleDateString("en-US", { weekday: "short" }),
+      axisLabel: d.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+      }),
+      dateLabel: d.toLocaleDateString("en-US", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+      }),
+      orders: found?.orders || 0,
+      sales: found?.sales || 0,
+    });
+  }
+
+  return allDays;
+};

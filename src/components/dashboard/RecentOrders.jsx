@@ -32,7 +32,7 @@ export default function RecentOrders({ orders }) {
         </div>
       )}
 
-      <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+      <div className="space-y-2 max-h-full overflow-y-auto pr-1">
         {orders?.map((order) => (
           <div
             key={order.id}

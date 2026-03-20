@@ -4,8 +4,9 @@ import StatsCard from "../components/dashboard/StatsCard";
 import MonthlyBarChart from "../components/dashboard/MonthlyBarChart";
 import ServicePieChart from "../components/dashboard/ServicePieChart";
 import RevenueLineChart from "../components/dashboard/RevenueLineChart";
+import DailySevenLineChart from "../components/dashboard/DailySevenLineChart";
 import RecentOrders from "../components/dashboard/RecentOrders";
-import { getDashboardStats } from "../firebase/helpers";
+import { getDashboardStats, getDailyRecordsByMonth } from "../firebase/helpers";
 import {
   DollarSign,
   ShoppingBag,
@@ -17,6 +18,11 @@ import {
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dailyLoading, setDailyLoading] = useState(true);
+  const [dailyData, setDailyData] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(
+    new Date().toISOString().slice(0, 7),
+  );
 
   useEffect(() => {
     getDashboardStats()
@@ -24,6 +30,14 @@ export default function Dashboard() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    setDailyLoading(true);
+    getDailyRecordsByMonth(selectedMonth)
+      .then(setDailyData)
+      .catch(console.error)
+      .finally(() => setDailyLoading(false));
+  }, [selectedMonth]);
 
   if (loading) {
     return (
@@ -106,9 +120,15 @@ export default function Dashboard() {
       </div>
 
       {/* Charts row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div className="lg:col-span-2 space-y-4">
           <RevenueLineChart data={stats?.monthlyData || []} />
+          <DailySevenLineChart
+            data={dailyData}
+            selectedMonth={selectedMonth}
+            onMonthChange={setSelectedMonth}
+            loading={dailyLoading}
+          />
         </div>
         <RecentOrders orders={stats?.recentOrders || []} />
       </div>
