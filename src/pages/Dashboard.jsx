@@ -111,26 +111,23 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Charts row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-        <div className="lg:col-span-2">
-          <MonthlyBarChart data={stats?.monthlyData || []} />
-        </div>
-        <ServicePieChart data={stats?.serviceData || []} />
-      </div>
-
-      {/* Charts row 2 */}
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         <div className="lg:col-span-2 space-y-4">
-          <RevenueLineChart data={stats?.monthlyData || []} />
           <DailySevenLineChart
             data={dailyData}
             selectedMonth={selectedMonth}
             onMonthChange={setSelectedMonth}
             loading={dailyLoading}
           />
+          <MonthlyBarChart data={stats?.monthlyData || []} />
+          <RevenueLineChart data={stats?.monthlyData || []} />
         </div>
-        <RecentOrders orders={stats?.recentOrders || []} />
+
+        <div className="space-y-4">
+          <ServicePieChart data={stats?.serviceData || []} />
+          <RecentOrders orders={stats?.recentOrders || []} />
+        </div>
       </div>
     </Layout>
   );
