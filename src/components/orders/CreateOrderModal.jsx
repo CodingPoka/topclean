@@ -185,7 +185,7 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
                           <span className="text-sm text-white">{svc.name}</span>
                         </div>
                         <span className="text-gold text-sm font-semibold">
-                          ৳{svc.price}
+                          ج.س..{svc.price}
                         </span>
                       </button>
                     ))}
@@ -256,7 +256,7 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
                             </button>
                           </div>
                           <span className="text-gold text-sm font-semibold">
-                            ৳{(item.price * item.qty).toLocaleString()}
+                            ج.س..{(item.price * item.qty).toLocaleString()}
                           </span>
                         </div>
                       </div>
@@ -269,12 +269,12 @@ export default function CreateOrderModal({ open, onClose, onCreated }) {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Subtotal</span>
                     <span className="text-white">
-                      ৳{total.toLocaleString()}
+                      ج.س..{total.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between text-base font-semibold">
                     <span className="text-white">Total</span>
-                    <span className="text-gold">৳{total.toLocaleString()}</span>
+                    <span className="text-gold">ج.س..{total.toLocaleString()}</span>
                   </div>
                   <button
                     onClick={handleSubmit}

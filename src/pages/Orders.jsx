@@ -36,11 +36,11 @@ export default function Orders() {
     onAfterPrint: () => toast.success("Receipt printed!"),
     pageStyle: `
       @page {
-        size: 80mm auto;
         margin: 0;
       }
       @media print {
-        body { margin: 0; }
+        body { margin: 0; padding: 0; width: 100%; box-sizing: border-box; }
+        ::-webkit-scrollbar { display: none; }
       }
     `,
   });
@@ -175,7 +175,7 @@ export default function Orders() {
                         : "—"}
                     </td>
                     <td className="p-4 text-right text-sm font-semibold text-gold">
-                      ৳{order.total?.toLocaleString()}
+                      ج.س..{order.total?.toLocaleString()}
                     </td>
                     <td className="p-4">
                       <div className="flex items-center justify-end gap-2">
@@ -211,7 +211,7 @@ export default function Orders() {
         <span>
           Total:{" "}
           <span className="text-gold font-semibold">
-            ৳{filtered.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()}
+            ج.س..{filtered.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()}
           </span>
         </span>
       </div>

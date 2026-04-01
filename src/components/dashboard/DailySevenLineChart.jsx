@@ -21,7 +21,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         <p className="text-white">
           Sales:{" "}
           <span className="text-gold font-semibold">
-            ৳{sales.toLocaleString()}
+            ج.س..{sales.toLocaleString()}
           </span>
         </p>
         <p className="text-gray-400">Orders: {orders}</p>
@@ -161,7 +161,7 @@ export default function DailySevenLineChart({
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: "#8892a4", fontSize: 11 }}
-                tickFormatter={(v) => `৳${(v / 1000).toFixed(0)}k`}
+                tickFormatter={(v) => `ج.س..${(v / 1000).toFixed(0)}k`}
               />
               <Tooltip
                 content={<CustomTooltip />}

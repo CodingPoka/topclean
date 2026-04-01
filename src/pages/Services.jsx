@@ -129,7 +129,7 @@ export default function Services() {
                     </p>
                   )}
                   <p className="text-gold font-bold text-base">
-                    ৳{svc.price?.toLocaleString()}
+                    ج.س..{svc.price?.toLocaleString()}
                   </p>
                 </div>
               </motion.div>

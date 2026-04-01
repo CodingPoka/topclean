@@ -16,9 +16,11 @@ const ReceiptPrint = forwardRef(({ order }, ref) => {
     <div
       ref={ref}
       style={{
-        width: "302px",
+        width: "100%",
+        maxWidth: "300px",
+        boxSizing: "border-box",
         margin: "0 auto",
-        padding: "12px 10px 20px",
+        padding: "25px 10px 10px 10px",
         background: "#fff",
         color: "#000",
         fontFamily: "'Courier New', Courier, monospace",
@@ -26,39 +28,33 @@ const ReceiptPrint = forwardRef(({ order }, ref) => {
         lineHeight: "1.5",
       }}
     >
-      {/* Logo */}
-      <div style={{ textAlign: "center", marginBottom: "6px" }}>
-        <img
-          src="/logot.png"
-          alt="Top Clean"
-          style={{ width: "80px", display: "inline-block" }}
-        />
-      </div>
-
       <div
         style={{
           textAlign: "center",
-          fontSize: "17px",
+          fontSize: "18px",
           fontWeight: "700",
           letterSpacing: "0.8px",
-          marginBottom: "2px",
+          marginBottom: "4px",
         }}
       >
         Top Clean
       </div>
 
       <div style={{ textAlign: "center", fontSize: "10px", color: "#444" }}>
-        Luxury Laundry Services
+        Dammadina Portsudan Sudan
+      </div>
+      <div style={{ textAlign: "center", fontSize: "10px", color: "#444" }}>
+        topcleanlaundry227@gmail.com
       </div>
       <div
         style={{
           textAlign: "center",
           fontSize: "10px",
-          color: "#666",
+          color: "#444",
           marginBottom: "8px",
         }}
       >
-        5-Star Hotel Standard
+        Mob: 0111766687 | 0900038537
       </div>
 
       <div style={{ textAlign: "center", fontSize: "11px" }}>{divider}</div>
@@ -169,7 +165,7 @@ const ReceiptPrint = forwardRef(({ order }, ref) => {
         }}
       >
         <span>TOTAL</span>
-        <span>{order.total?.toLocaleString()}</span>
+        <span>{order.total?.toLocaleString()} ج.س.</span>
       </div>
 
       <div style={{ textAlign: "center", fontSize: "11px", margin: "6px 0" }}>
