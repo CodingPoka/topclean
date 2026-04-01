@@ -165,7 +165,7 @@ const ReceiptPrint = forwardRef(({ order }, ref) => {
         }}
       >
         <span>TOTAL</span>
-        <span>{order.total?.toLocaleString()} ج.س.</span>
+        <span>{order.total?.toLocaleString()} SDG</span>
       </div>
 
       <div style={{ textAlign: "center", fontSize: "11px", margin: "6px 0" }}>
