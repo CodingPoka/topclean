@@ -169,7 +169,7 @@ export default function ServiceModal({ open, onClose, onSaved, editData }) {
 
               <div>
                 <label className="text-xs text-gray-400 block mb-1.5">
-                  Price (ج.س..) *
+                  Price (SDG) *
                 </label>
                 <input
                   className="input-field text-sm"

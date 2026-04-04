@@ -100,7 +100,7 @@ export default function Reports() {
         {[
           {
             label: "Total Revenue",
-            value: `SDG${orders.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()}`,
+            value: `${orders.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()} SDG`,
             icon: DollarSign,
             color: "#D4AF37",
           },
@@ -156,7 +156,7 @@ export default function Reports() {
               axisLine={false}
               tickLine={false}
               tick={{ fill: "#8892a4", fontSize: 11 }}
-              tickFormatter={(v) => `SDG${(v / 1000).toFixed(0)}k`}
+              tickFormatter={(v) => `${(v / 1000).toFixed(0)}k SDG`}
             />
             <Tooltip
               contentStyle={{
@@ -167,7 +167,7 @@ export default function Reports() {
                 fontSize: "12px",
               }}
               formatter={(v, n) => [
-                n === "revenue" ? `SDG${v.toLocaleString()}` : v,
+                n === "revenue" ? `${v.toLocaleString()} SDG` : v,
                 n === "revenue" ? "Revenue" : "Orders",
               ]}
             />
@@ -207,7 +207,7 @@ export default function Reports() {
                         {s.name}
                       </span>
                       <span className="text-gold font-semibold">
-                        ج.س..{s.revenue.toLocaleString()}
+                        {s.revenue.toLocaleString()} SDG
                       </span>
                     </div>
                     <div className="h-1.5 bg-navy-800 rounded-full overflow-hidden">
@@ -255,7 +255,7 @@ export default function Reports() {
                     <p className="text-xs text-gray-500">{c.orders} orders</p>
                   </div>
                   <p className="text-sm font-semibold text-gold">
-                    ج.س..{c.spent.toLocaleString()}
+                    {c.spent.toLocaleString()} SDG
                   </p>
                 </div>
               ))}

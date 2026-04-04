@@ -16,7 +16,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         <p className="text-white">
           Revenue:{" "}
           <span className="text-gold font-semibold">
-            ج.س..{payload[0]?.value?.toLocaleString()}
+            {payload[0]?.value?.toLocaleString()} SDG
           </span>
         </p>
         <p className="text-gray-400">Orders: {payload[1]?.value}</p>
@@ -57,7 +57,7 @@ export default function MonthlyBarChart({ data }) {
             axisLine={false}
             tickLine={false}
             tick={{ fill: "#8892a4", fontSize: 11 }}
-            tickFormatter={(v) => `SDG${(v / 1000).toFixed(0)}k`}
+            tickFormatter={(v) => `${(v / 1000).toFixed(0)}k SDG`}
           />
           <Tooltip
             content={<CustomTooltip />}

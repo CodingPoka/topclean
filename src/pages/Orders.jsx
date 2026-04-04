@@ -175,7 +175,7 @@ export default function Orders() {
                         : "—"}
                     </td>
                     <td className="p-4 text-right text-sm font-semibold text-gold">
-                      ج.س..{order.total?.toLocaleString()}
+                      {order.total?.toLocaleString()} SDG
                     </td>
                     <td className="p-4">
                       <div className="flex items-center justify-end gap-2">
@@ -211,7 +211,7 @@ export default function Orders() {
         <span>
           Total:{" "}
           <span className="text-gold font-semibold">
-            ج.س..{filtered.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()}
+            {filtered.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()} SDG
           </span>
         </span>
       </div>

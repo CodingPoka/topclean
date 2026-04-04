@@ -15,7 +15,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className="bg-navy-800 border border-gold/20 rounded-xl p-3 shadow-card text-sm">
         <p className="text-gold font-medium mb-1">{label}</p>
-        <p className="text-white">ج.س..{payload[0]?.value?.toLocaleString()}</p>
+        <p className="text-white">{payload[0]?.value?.toLocaleString()} SDG</p>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export default function RevenueLineChart({ data }) {
             axisLine={false}
             tickLine={false}
             tick={{ fill: "#8892a4", fontSize: 11 }}
-            tickFormatter={(v) => `SDG${(v / 1000).toFixed(0)}k`}
+            tickFormatter={(v) => `${(v / 1000).toFixed(0)}k SDG`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Area

@@ -80,14 +80,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatsCard
           title="Total Revenue"
-          value={`ج.س..${(stats?.totalRevenue || 0).toLocaleString()}`}
+          value={`${(stats?.totalRevenue || 0).toLocaleString()} SDG`}
           icon={DollarSign}
           color="gold"
           delay={0}
         />
         <StatsCard
           title="Today's Sales"
-          value={`ج.س..${(stats?.todaySales || 0).toLocaleString()}`}
+          value={`${(stats?.todaySales || 0).toLocaleString()} SDG`}
           icon={Clock}
           color="green"
           delay={0.05}
@@ -95,7 +95,7 @@ export default function Dashboard() {
         />
         <StatsCard
           title="Monthly Sales"
-          value={`ج.س..${(stats?.monthSales || 0).toLocaleString()}`}
+          value={`${(stats?.monthSales || 0).toLocaleString()} SDG`}
           icon={TrendingUp}
           color="blue"
           delay={0.1}

@@ -57,7 +57,7 @@ export default function RecentOrders({ orders }) {
             </div>
             <div className="text-right flex-shrink-0">
               <p className="text-sm font-semibold text-gold">
-                ج.س..{order.total?.toLocaleString()}
+                {order.total?.toLocaleString()} SDG
               </p>
               <span
                 className={`text-xs px-2 py-0.5 rounded-full ${statusColor[order.status] || statusColor.completed}`}

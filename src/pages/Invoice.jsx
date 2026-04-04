@@ -459,7 +459,7 @@ export default function Invoice() {
                 <div>
                   <p className="text-xs text-gray-500">Total Revenue</p>
                   <p className="text-xl font-bold text-gold">
-                    ج.س..{totalRevenue.toLocaleString()}
+                    {totalRevenue.toLocaleString()} SDG
                   </p>
                 </div>
                 <div>
@@ -602,7 +602,7 @@ export default function Invoice() {
                         {invoice.ordersCount || 0}
                       </td>
                       <td className="p-3 text-right text-sm font-semibold text-gold">
-                        ج.س..{(invoice.totalAmount || 0).toLocaleString()}
+                        {(invoice.totalAmount || 0).toLocaleString()} SDG
                       </td>
                       <td className="p-3 text-right text-xs text-gray-500">
                         {invoice.createdAt?.toDate
