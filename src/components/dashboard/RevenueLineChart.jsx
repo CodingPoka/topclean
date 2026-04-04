@@ -57,7 +57,7 @@ export default function RevenueLineChart({ data }) {
             axisLine={false}
             tickLine={false}
             tick={{ fill: "#8892a4", fontSize: 11 }}
-            tickFormatter={(v) => `ج.س..${(v / 1000).toFixed(0)}k`}
+            tickFormatter={(v) => `SDG${(v / 1000).toFixed(0)}k`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Area

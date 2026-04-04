@@ -100,7 +100,7 @@ export default function Reports() {
         {[
           {
             label: "Total Revenue",
-            value: `ج.س..${orders.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()}`,
+            value: `SDG${orders.reduce((s, o) => s + (o.total || 0), 0).toLocaleString()}`,
             icon: DollarSign,
             color: "#D4AF37",
           },
@@ -156,7 +156,7 @@ export default function Reports() {
               axisLine={false}
               tickLine={false}
               tick={{ fill: "#8892a4", fontSize: 11 }}
-              tickFormatter={(v) => `ج.س..${(v / 1000).toFixed(0)}k`}
+              tickFormatter={(v) => `SDG${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip
               contentStyle={{
@@ -167,7 +167,7 @@ export default function Reports() {
                 fontSize: "12px",
               }}
               formatter={(v, n) => [
-                n === "revenue" ? `ج.س..${v.toLocaleString()}` : v,
+                n === "revenue" ? `SDG${v.toLocaleString()}` : v,
                 n === "revenue" ? "Revenue" : "Orders",
               ]}
             />
